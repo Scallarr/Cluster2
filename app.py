@@ -5,11 +5,13 @@ Created on Sun Apr 20 15:06:42 2025
 @author: yoyop
 """
 
+
 # app.py
 import streamlit as st
 import pickle
 import matplotlib.pyplot as plt
-from sklearn.datasets import make_blobs
+from sklearn.datasets import load_iris
+from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
 import numpy as np
 
@@ -17,38 +19,38 @@ import numpy as np
 st.set_page_config(page_title="K-Means Clustering App", layout="centered")
 
 # Title
-st.title("🔍 k-Means Clustering Visualizer")
+st.title("🔍 K-Means Clustering App with Iris Dataset")
 
-# Display section header
-st.subheader("📊 Interactive Cluster Selection")
-st.markdown("Use the slider below to choose the number of clusters for synthetic data.")
+# Sidebar for user interaction
+st.sidebar.header("Configure Clustering")
+num_clusters = st.sidebar.slider("Select number of Clusters", min_value=2, max_value=10, value=3)
 
-# Slider to select number of clusters
-num_clusters = st.slider("Select number of clusters:", min_value=2, max_value=10, value=4)
+# Load Iris dataset
+iris = load_iris()
+X = iris.data
+y = iris.target
 
-# Generate synthetic data
-X, _ = make_blobs(
-    n_samples=300,
-    centers=num_clusters,
-    cluster_std=0.60,
-    random_state=0
-)
+# Apply PCA for 2D projection
+pca = PCA(n_components=2)
+X_pca = pca.fit_transform(X)
 
-# Fit a new KMeans model on generated data
-kmeans_model = KMeans(n_clusters=num_clusters, random_state=0)
-kmeans_model.fit(X)
+# KMeans clustering
+kmeans = KMeans(n_clusters=num_clusters, random_state=0)
+y_kmeans = kmeans.fit_predict(X_pca)
 
-# Predict cluster labels
-y_kmeans = kmeans_model.predict(X)
+# Define a set of distinct colors
+colors = plt.cm.get_cmap("tab10", num_clusters)  # Tab10 colormap is good for distinct colors
 
-# Plot clusters
+# Plot clusters without centroids
 plt.figure(figsize=(8, 6))
-plt.scatter(X[:, 0], X[:, 1], c=y_kmeans, s=50, cmap='viridis')
-plt.title(f'K-Means Clustering with {num_clusters} Clusters')
+for i in range(num_clusters):
+    plt.scatter(X_pca[y_kmeans == i, 0], X_pca[y_kmeans == i, 1], c=[colors(i)], s=50, label=f"Cluster {i}")
 
-# Display cluster centers
-centers = kmeans_model.cluster_centers_
-plt.scatter(centers[:, 0], centers[:, 1], c='red', s=200, alpha=0.5, marker='o', label="Centroids")
+# Add title and labels
+plt.title(f'Clusters (2D PCA Projection)')
+plt.xlabel('PCA1')
+plt.ylabel('PCA2')
 
+# Add color legend
 plt.legend()
 st.pyplot(plt)
