@@ -48,10 +48,7 @@ for i in range(num_clusters):
         label=f"Cluster {i}"
     )
 
-# Optional: plot centroids
-centroids = kmeans.cluster_centers_
-plt.scatter(centroids[:, 0], centroids[:, 1], 
-            s=200, c='black', marker='X', label='Centroids')
+
 
 # Add titles and labels
 plt.title("Clusters (2D PCA Projection)")
