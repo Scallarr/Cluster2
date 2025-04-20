@@ -35,7 +35,7 @@ kmeans = KMeans(n_clusters=num_clusters, random_state=0)
 y_kmeans = kmeans.fit_predict(X_pca)
 
 # Define custom colors for clusters
-cluster_colors = ['green', 'orange', 'blue', 'red', 'purple', 'brown', 'pink', 'gray', 'olive', 'cyan']
+cluster_colors = ['green', 'orange', 'red', 'blue', 'purple', 'brown', 'pink', 'gray', 'olive', 'cyan']
 
 # Plotting the clusters
 plt.figure(figsize=(8, 6))
