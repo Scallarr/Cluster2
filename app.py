@@ -1,14 +1,10 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sun Apr 20 15:06:42 2025
-
 @author: yoyop
 """
 
-
-# app.py
 import streamlit as st
-import pickle
 import matplotlib.pyplot as plt
 from sklearn.datasets import load_iris
 from sklearn.decomposition import PCA
@@ -22,7 +18,7 @@ st.set_page_config(page_title="K-Means Clustering App", layout="centered")
 st.title("🔍 K-Means Clustering App with Iris Dataset")
 
 # Sidebar for user interaction
-st.sidebar.header("Configure Clustering")
+st.sidebar.header("🧪 Configure Clustering")
 num_clusters = st.sidebar.slider("Select number of Clusters", min_value=2, max_value=10, value=3)
 
 # Load Iris dataset
@@ -38,19 +34,30 @@ X_pca = pca.fit_transform(X)
 kmeans = KMeans(n_clusters=num_clusters, random_state=0)
 y_kmeans = kmeans.fit_predict(X_pca)
 
-# Define a set of distinct colors
-colors = plt.cm.get_cmap("tab10", num_clusters)  # Tab10 colormap is good for distinct colors
+# Define custom colors for clusters
+cluster_colors = ['blue', 'orange', 'green', 'red', 'purple', 'brown', 'pink', 'gray', 'olive', 'cyan']
 
-# Plot clusters without centroids
+# Plotting the clusters
 plt.figure(figsize=(8, 6))
 for i in range(num_clusters):
-    plt.scatter(X_pca[y_kmeans == i, 0], X_pca[y_kmeans == i, 1], c=[colors(i)], s=50, label=f"Cluster {i}")
+    plt.scatter(
+        X_pca[y_kmeans == i, 0], 
+        X_pca[y_kmeans == i, 1], 
+        c=cluster_colors[i], 
+        s=50, 
+        label=f"Cluster {i}"
+    )
 
-# Add title and labels
-plt.title(f'Clusters (2D PCA Projection)')
-plt.xlabel('PCA1')
-plt.ylabel('PCA2')
+# Optional: plot centroids
+centroids = kmeans.cluster_centers_
+plt.scatter(centroids[:, 0], centroids[:, 1], 
+            s=200, c='black', marker='X', label='Centroids')
 
-# Add color legend
+# Add titles and labels
+plt.title("Clusters (2D PCA Projection)")
+plt.xlabel("PCA 1")
+plt.ylabel("PCA 2")
 plt.legend()
-st.pyplot(plt)
+
+# Show plot in Streamlit
+st.pyplot(plt, use_container_width=True)
