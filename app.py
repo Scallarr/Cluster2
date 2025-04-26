@@ -19,7 +19,7 @@ st.title("🔍 K-Means Clustering App with Iris Dataset")
 
 # Sidebar for user interaction
 st.sidebar.header("🧪 Configure Clustering")
-num_clusters = st.sidebar.slider("Select number of Clusters", min_value=2, max_value=10, value=3)
+num_clusters = st.sidebar.slider("Select number of Clusters", min_value=2, max_value=10, value=4)
 
 # Load Iris dataset
 iris = load_iris()
